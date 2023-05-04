@@ -1,0 +1,24 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "exam project",
+  "main": "app.js",
+  "scripts": {
+    "test": "\"\\\"echo \\\\\\\"Error: no test specified\\\\\\\" && exit 1\\\"\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SkibstedN/NodeJS_final_1.0.git"
+  },
+  "keywords": [
+    "MongoDB",
+    "Fetch",
+    "Sockets"
+  ],
+  "author": "Nikolaj Skibsted",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SkibstedN/NodeJS_final_1.0/issues"
+  },
+  "homepage": "https://github.com/SkibstedN/NodeJS_final_1.0#readme"
+}
