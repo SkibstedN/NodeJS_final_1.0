@@ -7,8 +7,6 @@ import authRoutes from './routes/authRoutes.js';
 const app = express();
 app.use(express.json());
 dotenv.config();
-app.use('/auth', authRoutes);
-
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -18,6 +16,8 @@ app.use(session({
     maxAge: 60 * 60 * 1000, // 1 hour
   },
 }));
+
+app.use('/auth', authRoutes);
 
 const connectionString = process.env.MONGODB_CONNECT;
 mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
