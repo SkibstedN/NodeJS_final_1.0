@@ -38,7 +38,8 @@ router.post('/register', async (req, res) => {
     await sendEmail({
       to: user.email,
       subject: 'Welcome to Our Application',
-      text: `Dear ${username},\n\nWelcome to our application. We are glad to have you onboard.\n`,
+      text: `Dear ${username},\n\nWelcome to my Exam Project application. I am glad to have you onboard. Respectfully - 
+      N. SKibsted.\n`,
     });
 
     res.status(201).json({ message: 'User registered successfully' });
