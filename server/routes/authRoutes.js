@@ -33,6 +33,7 @@ router.post('/register', async (req, res) => {
     const user = new User({ username, email, password });
     await user.save();
     req.session.userId = user._id;
+    
 
     // Call sendEmail function
     await sendEmail({
@@ -42,8 +43,9 @@ router.post('/register', async (req, res) => {
       N. SKibsted.\n`,
     });
 
-    res.status(201).json({ message: 'User registered successfully' });
+    res.status(201).json({ success: true, message: 'User registered successfully' });
   } catch (error) {
+    console.error('Registration Error:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -63,6 +65,7 @@ router.post('/login', async (req, res) => {
       res.status(200).json({ message: 'User logged in successfully' });
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -89,7 +92,21 @@ router.post('/forgotPassword', async (req, res) => {
               If you did not request this, please ignore this email and your password will remain unchanged.\n`,
     });
 
-    res.status(200).json('recovery email sent');
+    res.status(200).json({ message: 'recovery email sent' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get('/resetPassword/:token', async (req, res) => {
+  try {
+    const user = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Password reset token is invalid or has expired.' });
+    }
+    res.sendFile(path.resolve('../client/public/resetPassword.html'));
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
