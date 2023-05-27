@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             setTimeout(() => {
               window.location.href = 'frontpage.html';
-            }, 3000); 
+            }, 1500); 
 
           }
         })
@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (resetPasswordForm) {
       resetPasswordForm.addEventListener('submit', (e) => {
+        console.log('Form submitted');
         e.preventDefault();
         
         const newPassword = document.getElementById('new-password').value;
@@ -172,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
           if (data.message) {
             toastr.success('Logged out successfully');
             setTimeout(() => {
-              window.location.href = 'login.html';
+              window.location.href = 'index.html';
             }, 2000);
           } else {
             toastr.error('Logout failed');

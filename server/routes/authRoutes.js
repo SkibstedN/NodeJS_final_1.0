@@ -2,6 +2,7 @@ import express from 'express';
 import User from '../models/User.js';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
+import path from 'path';
 
 const router = express.Router();
 
@@ -92,7 +93,7 @@ router.post('/forgotPassword', async (req, res) => {
               If you did not request this, please ignore this email and your password will remain unchanged.\n`,
     });
 
-    res.status(200).json({ message: 'recovery email sent' });
+    res.status(200).json({ success: true, message: 'recovery email sent' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -123,6 +124,10 @@ router.post('/resetPassword/:token', async (req, res) => {
     user.password = password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
+
+    // Mark the password as modified before saving
+    user.markModified('password');
+    
     await user.save();
     res.json({ message: 'Password has been reset successfully.' });
   } catch (error) {

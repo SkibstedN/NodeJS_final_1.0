@@ -4,11 +4,15 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import session from 'express-session';
 import authRoutes from './routes/authRoutes.js';
+import path from 'path';
+
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 dotenv.config();
+app.use(express.static(path.join(__dirname, '../client/public')));
+
 
 
 app.use(session({
