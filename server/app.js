@@ -30,7 +30,7 @@ app.use(session({
 }));
 
 app.use('/auth', authRoutes);
-app.use('/app'pageRoutes);
+app.use('/app', pageRoutes);
 
 const connectionString = process.env.MONGODB_CONNECT;
 mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
