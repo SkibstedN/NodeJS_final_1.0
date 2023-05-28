@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (loginForm) {
       loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-    
+        
         const emailInput = document.getElementById('login-email');
         const passwordInput = document.getElementById('login-password');
-    
+        
         fetch('http://localhost:5000/auth/login', {
           method: 'POST',
           headers: {
@@ -24,22 +24,26 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
           if (data.error) {
-            // Show error message
             toastr.error(data.error);
           } else {
-            // Show success message and clear the form
             toastr.success('Logged in successfully!');
             loginForm.reset();
-
-            setTimeout(() => {
-              window.location.href = 'frontpage.html';
-            }, 1500); 
-
+    
+            fetch('http://localhost:5000/app/checkSession')
+            .then(response => response.json())
+            .then(data => {
+              if (data.loggedIn) {
+                setTimeout(() => {
+                  window.location.href = '/app/frontpage';
+                }, 1500);
+              } else {
+                toastr.error('Session check failed. Please try logging in again.');
+              }
+            });
           }
         })
         .catch(error => {
           console.error('Error:', error);
-          // Show error message
           toastr.error('Something went wrong, please try again later.');
         });
       });
@@ -119,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
+
     const resetPasswordForm = document.getElementById('reset-password-form');
 
     if (resetPasswordForm) {
@@ -131,6 +136,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get the token from the URL
         const urlPathname = window.location.pathname;
         const token = urlPathname.split('/').pop();
+
+        console.log('New password: ', newPassword);
+        console.log('Token: ', token);
     
         // Send POST request to server with new password and token
         fetch(`http://localhost:5000/auth/resetPassword/${token}`, {
