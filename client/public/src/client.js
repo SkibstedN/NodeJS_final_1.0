@@ -136,9 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get the token from the URL
         const urlPathname = window.location.pathname;
         const token = urlPathname.split('/').pop();
-
-        console.log('New password: ', newPassword);
-        console.log('Token: ', token);
     
         // Send POST request to server with new password and token
         fetch(`http://localhost:5000/auth/resetPassword/${token}`, {
@@ -181,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
           if (data.message) {
             toastr.success('Logged out successfully');
             setTimeout(() => {
-              window.location.href = 'index.html';
+              window.location.href = '/index.html';
             }, 2000);
           } else {
             toastr.error('Logout failed');
