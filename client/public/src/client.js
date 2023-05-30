@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const socket = io('http://localhost:5000');
+
+    socket.on('message', (data) => {
+      console.log('Message from server:', data);
+  });
+
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
     const logoutBtn = document.getElementById('logout-btn');

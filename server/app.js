@@ -18,6 +18,22 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, '../client/public')));
 app.use('/scripts', express.static(path.join(process.cwd(), 'node_modules')));
 
+import http from "http";
+const server = http.createServer(app);
+
+import { Server } from "socket.io";
+const io = new Server(server);
+
+io.on("connection", (socket) => {
+  console.log("A client connected", socket.id);
+
+  socket.emit('message', { text: 'Hello from server!' });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  })
+});
+
 
 
 app.use(session({
@@ -38,4 +54,4 @@ mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: 
   .catch(err => console.error('Could not connect to MongoDB Atlas', err));
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+server.listen(port, () => console.log(`Server running on port ${port}`));
