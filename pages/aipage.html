@@ -1,0 +1,48 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI PAGE</title>
+    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"  crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="/stylesheet.css">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <script id="interaxai-widget-config">
+        window.INTERAX_AI = {
+          widgetID: "dall-e",
+          ownerID: "647bb603343c463fb595522f",
+        };
+    </script>
+    <script id="interaxai-widget-script" defer="defer" src="https://cdn.jsdelivr.net/gh/interaxai/cdn@v1.11.4/dist/bundle.js"></script>
+
+</head>
+<body>
+
+    <br><br>
+    <marquee id="m1">Join the future, discover AI @ <a href="https://huggingface.co/" ><p style="color: red;"> https://huggingface.co </p>The AI community building the future!</a></marquee>
+    <br><br>
+
+
+    <div id="AI_box"><interaxai-input id="input1"></interaxai-input>
+      <interaxai-select id="select1"></interaxai-select>
+      <interaxai-submit id="submit1"></interaxai-submit>
+      <interaxai-result id="result1"></interaxai-result></div>
+
+      <script>
+        fetch('http://localhost:5000/app/checkSession')
+          .then(response => response.json())
+          .then(data => {
+            if (!data.loggedIn) {
+              window.location.href = '/index.html';
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            toastr.error('Login to continue.');
+          });
+      </script>
+
+    
+</body>
+</html>

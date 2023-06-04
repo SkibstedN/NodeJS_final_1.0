@@ -1,0 +1,31 @@
+#commentBoxDiv {
+    border: solid black 2px;
+    padding: 2em;
+}
+
+#AI_box  {
+    border: solid black 2px;
+    padding: 5em;
+    margin: 2em;
+
+}
+
+p  {
+    font-size: x-large;
+}
+
+#m1 {
+    font-size: x-large;
+}
+
+
+
+#header1  {
+    font-weight: bold;
+    font-size:x-large;
+    margin-bottom: 10em;
+}
+
+
+
+
