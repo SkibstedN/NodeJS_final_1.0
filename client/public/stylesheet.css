@@ -26,6 +26,19 @@ p  {
     margin-bottom: 10em;
 }
 
+#formdiv {
+    border: solid black 2px;
+    background-color:rgb(181, 178, 178);
+    margin-left: 2em;
+    margin-right: 40%;
+    padding-left:1em;
+    padding-top: 0.1em;
+    padding-bottom: 1.5em;
+}
 
+#indexH1 {
+    margin-left: 1em;
+
+}
 
 
