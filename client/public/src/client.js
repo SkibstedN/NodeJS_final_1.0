@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
           if (data.success) {
             toastr.success('Registered successfully');
-            // Optionally, redirect the user to another page
+            registerForm.reset();
           } else {
             toastr.error('Registration failed');
           }
