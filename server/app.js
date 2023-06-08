@@ -24,6 +24,10 @@ const server = http.createServer(app);
 import { Server } from "socket.io";
 const io = new Server(server);
 
+setInterval(function(){
+  io.emit('message', 'This is a message sent to all clients every second.');
+}, 1000);
+
 io.on("connection", (socket) => {
   console.log("A client connected", socket.id);
 
