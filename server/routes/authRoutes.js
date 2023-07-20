@@ -63,7 +63,7 @@ router.post('/login', async (req, res) => {
       if (!isMatch) return res.status(400).json({ error: 'Invalid password' });
 
       req.session.userId = user._id;
-      res.status(200).json({ message: 'User logged in successfully' });
+      res.status(200).json({ message: 'User logged in successfully', username: user.username });
     });
   } catch (error) {
     console.error(error);

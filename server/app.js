@@ -7,38 +7,52 @@ import authRoutes from './routes/authRoutes.js';
 import pageRoutes from './routes/pageRoutes.js';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import http from "http";
+import { Server } from "socket.io";
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-dotenv.config();
 
 // Create equivalent of __dirname in ES modules
 const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, '../client/public')));
 app.use('/scripts', express.static(path.join(process.cwd(), 'node_modules')));
 
-import http from "http";
 const server = http.createServer(app);
-
-import { Server } from "socket.io";
 const io = new Server(server);
-
-setInterval(function(){
-  io.emit('message', 'This is a message sent to all clients every second.');
-}, 1000);
+let onlineUsers = {};
 
 io.on("connection", (socket) => {
-  console.log("A client connected", socket.id);
-
-  socket.emit('message', { text: 'Hello from server!' });
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
-  })
+    console.log(`A client connected: ${socket.id}`);
+  
+    // User logs in
+    socket.on("login", (username) => {
+        onlineUsers[socket.id] = username;
+        io.emit("userLogin", username);
+    });
+  
+    // User sends message
+    socket.on("sendMessage", (message) => {
+        io.emit("receiveMessage", { username: onlineUsers[socket.id], message });
+    });
+  
+    // User logs out
+    socket.on("logout", () => {
+        const username = onlineUsers[socket.id];
+        delete onlineUsers[socket.id];
+        io.emit("userLogout", username);
+    });
+  
+    // User disconnects
+    socket.on("disconnect", () => {
+        const username = onlineUsers[socket.id];
+        delete onlineUsers[socket.id];
+        io.emit("userLogout", username);
+    });
 });
-
-
 
 app.use(session({
   secret: process.env.SESSION_SECRET,

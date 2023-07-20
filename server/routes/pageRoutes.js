@@ -24,9 +24,9 @@ router.get('/checkSession', (req, res) => {
     res.sendFile(path.resolve('../pages/frontpage.html'));
   });
 
-  router.get('/aipage', isAuthorized, (req,res) => {
+  router.get('/chatroom', isAuthorized, (req,res) => {
     res.set('Cache-Control', 'no-store, must-revalidate, private').set('Expires', '-1').set('Pragma', 'no-cache');
-    res.sendFile(path.resolve('../pages/aipage.html'));
+    res.sendFile(path.resolve('../pages/chatroom.html'));
   });
   
 
