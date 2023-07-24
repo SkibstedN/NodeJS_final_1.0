@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const chatbox = document.getElementById('chatbox');
   const chatInput = document.getElementById('chat-input');
   const userList = document.getElementById('user-list');
+  console.log(userList); 
+
+ 
+
 
   // Chat feature event handlers
   if (chatbox && chatInput && userList) {
@@ -20,19 +24,42 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     socket.on("userLogin", (username) => {
+        console.log("userLogin event received with username: ", username);
         userList.innerHTML += `<li>${username}</li>`;
+        console.log('User list innerHTML after userLogin:', userList.innerHTML);  
     });
 
     socket.on("userLogout", (username) => {
-        userList.innerHTML = userList.innerHTML.replace(`<li>${username}</li>`, "");
-    });
+      console.log("userLogout event received with username:", username);
+      userList.innerHTML = userList.innerHTML.replace(`<li>${username}</li>`, "");
+  });
 
-    // This should be chat-form, not chat-input
+
+if (userList) {
+  
+  fetch('http://localhost:5000/onlineUsers')
+  .then(res => res.json())
+  .then(users => {
+      userList.innerHTML = users.map(user => `<li>${user}</li>`).join('');
+  });
+
+  socket.on('userListChanged', () => {
+    fetch('http://localhost:5000/app/onlineUsers')  
+    .then(res => res.json())
+    .then(users => {
+        userList.innerHTML = users.map(user => `<li>${user}</li>`).join('');
+    });
+  });
+}
+
+
+   
     const chatForm = document.getElementById('chat-form');
     chatForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        const message = chatInput.value;
-        socket.emit("sendMessage", message);
+        const chatMessage = chatInput.value;
+        const username = sessionStorage.getItem('username');
+        socket.emit("sendMessage", { username, message: chatMessage });
         chatInput.value = '';
     });
 }
@@ -69,6 +96,9 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
           toastr.success('Logged in successfully!');
           loginForm.reset();
+
+          sessionStorage.setItem('username', data.username);
+          console.log("emitting login event with username: ", data.username);
 
           socket.emit("login", data.username);
 
@@ -208,7 +238,15 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(response => response.json())
       .then(data => {
         if (data.message) {
+
           toastr.success('Logged out successfully');
+          const username = sessionStorage.getItem('username');
+          console.log("emitting logout event for user:", username);
+
+          socket.emit("logout", username);
+          sessionStorage.removeItem('username');
+
+
           setTimeout(() => {
             window.location.href = '/index.html';
           }, 2000);

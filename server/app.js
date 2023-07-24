@@ -19,31 +19,41 @@ app.use(express.json());
 // Create equivalent of __dirname in ES modules
 const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, '../client/public')));
-app.use('/scripts', express.static(path.join(process.cwd(), 'node_modules')));
+app.use('/scripts', express.static(path.join(process.cwd(), 'node_modules')));  // Is this good practice - you can see node-modules
 
 const server = http.createServer(app);
 const io = new Server(server);
-let onlineUsers = {};
+// let onlineUsers = {};
+const onlineUsers = [];
 
 io.on("connection", (socket) => {
     console.log(`A client connected: ${socket.id}`);
+    io.emit('userListChanged');
+
   
     // User logs in
     socket.on("login", (username) => {
-        onlineUsers[socket.id] = username;
-        io.emit("userLogin", username);
+        console.log("login event received with username: ", username);
+        onlineUsers.push(username);
+        // io.emit("userLogin", username);
+        io.emit('userListChanged');
+
     });
   
     // User sends message
-    socket.on("sendMessage", (message) => {
-        io.emit("receiveMessage", { username: onlineUsers[socket.id], message });
+    socket.on("sendMessage", (data) => {
+        const { username, message: chatMessage } = data;
+        io.emit("receiveMessage", { username, message: chatMessage });
     });
   
     // User logs out
-    socket.on("logout", () => {
-        const username = onlineUsers[socket.id];
-        delete onlineUsers[socket.id];
-        io.emit("userLogout", username);
+    socket.on("logout", (username) => {
+        console.log("logout event received with username: ", username);
+        onlineUsers = onlineUsers.filter(user => user !== username);
+        // username = onlineUsers[socket.id];
+        // delete onlineUsers[socket.id];
+        io.emit('userListChanged');
+        // io.emit("userLogout", username);
     });
   
     // User disconnects
@@ -65,6 +75,16 @@ app.use(session({
 
 app.use('/auth', authRoutes);
 app.use('/app', pageRoutes);
+
+app.get('/app/onlineUsers', (req, res) => {
+  // Return online users
+  res.json(onlineUsers);
+});
+
+app.get('/onlineUsers', (req, res) => {
+  res.json(onlineUsers);
+});
+
 
 const connectionString = process.env.MONGODB_CONNECT;
 mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })

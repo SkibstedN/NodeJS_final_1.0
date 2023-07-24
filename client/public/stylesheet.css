@@ -41,4 +41,16 @@ p  {
 
 }
 
+#chat-container{
+    border: solid black 2px;
+    padding: 2em;
+    margin-right: 40%;
 
+}
+
+#user-container{
+    border: solid black 2px;
+    padding: 2em;
+    margin-right: 40%;
+
+}
