@@ -52,8 +52,6 @@ if (userList) {
   });
 }
 
-
-   
     const chatForm = document.getElementById('chat-form');
     chatForm.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -63,6 +61,32 @@ if (userList) {
         chatInput.value = '';
     });
 }
+
+
+// private rooms chat section begins here
+function getRoomID(user1, user2) {
+  let users = [user1, user2];
+  users.sort();
+  let roomID = users.join('-');
+  return roomID;
+}
+
+function startPrivateChat(otherUser) {
+  const username = sessionStorage.getItem('username');
+  const roomID = getRoomID(username, otherUser);
+
+  // Emit a "joinRoom" event to the server, passing the room ID
+  socket.emit('joinRoom', roomID);
+
+  // Now, when the user sends a chat message, it will be sent only to this room
+  chatForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const message = chatInput.value;
+    socket.emit('privateMessage', { roomID, username, message });
+    chatInput.value = '';
+  });
+}
+
 
   // Existing code begins
   const loginForm = document.getElementById('login-form');

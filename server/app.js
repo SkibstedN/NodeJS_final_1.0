@@ -24,7 +24,7 @@ app.use('/scripts', express.static(path.join(process.cwd(), 'node_modules')));  
 const server = http.createServer(app);
 const io = new Server(server);
 // let onlineUsers = {};
-const onlineUsers = [];
+let onlineUsers = [];
 
 io.on("connection", (socket) => {
     console.log(`A client connected: ${socket.id}`);
@@ -52,7 +52,7 @@ io.on("connection", (socket) => {
         onlineUsers = onlineUsers.filter(user => user !== username);
         // username = onlineUsers[socket.id];
         // delete onlineUsers[socket.id];
-        io.emit('userListChanged');
+        io.emit('userListChanged', onlineUsers);
         // io.emit("userLogout", username);
     });
   
