@@ -54,3 +54,26 @@ p  {
     margin-right: 40%;
 
 }
+
+#user-list {
+    margin-top: 20px;
+    list-style-type: none;
+    padding: 0;
+  }
+  .user-item {
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+  }
+  .start-chat-button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }

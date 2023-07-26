@@ -9,6 +9,7 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import http from "http";
 import { Server } from "socket.io";
+import User from './models/User.js'
 
 dotenv.config();
 
@@ -83,6 +84,24 @@ app.get('/app/onlineUsers', (req, res) => {
 
 app.get('/onlineUsers', (req, res) => {
   res.json(onlineUsers);
+});
+
+const loginRequired = (req, res, next) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  next();
+};
+
+
+app.get('/api/users', loginRequired, async (req, res) => {
+  try {
+    const users = await User.find({});  // Fetch all users
+    res.json(users.map(user => user.username));  // Respond with an array of usernames
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred while trying to fetch users.' });
+  }
 });
 
 

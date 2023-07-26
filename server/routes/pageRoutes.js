@@ -28,6 +28,11 @@ router.get('/checkSession', (req, res) => {
     res.set('Cache-Control', 'no-store, must-revalidate, private').set('Expires', '-1').set('Pragma', 'no-cache');
     res.sendFile(path.resolve('../pages/chatroom.html'));
   });
+
+  router.get('/userlist', isAuthorized, (req,res) => {
+    res.set('Cache-Control', 'no-store, must-revalidate, private').set('Expires', '-1').set('Pragma', 'no-cache');
+    res.sendFile(path.resolve('../pages/userlist.html'));
+  });
   
 
 

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   const socket = io('http://localhost:5000');
 
   // Existing socket message handler
@@ -35,22 +35,21 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
 
-if (userList) {
+  if (userList) {
   
-  fetch('http://localhost:5000/onlineUsers')
-  .then(res => res.json())
-  .then(users => {
+    async function fetchAndUpdateUserList() {
+      const res = await fetch('http://localhost:5000/app/onlineUsers');
+      const users = await res.json();
       userList.innerHTML = users.map(user => `<li>${user}</li>`).join('');
-  });
-
-  socket.on('userListChanged', () => {
-    fetch('http://localhost:5000/app/onlineUsers')  
-    .then(res => res.json())
-    .then(users => {
-        userList.innerHTML = users.map(user => `<li>${user}</li>`).join('');
-    });
-  });
-}
+    }
+  
+    // Execute the function immediately to fetch the initial user list
+    fetchAndUpdateUserList();
+  
+    // And also execute it every time the user list changes
+    socket.on('userListChanged', fetchAndUpdateUserList);
+  }
+  
 
     const chatForm = document.getElementById('chat-form');
     chatForm.addEventListener('submit', (event) => {
@@ -63,7 +62,62 @@ if (userList) {
 }
 
 
-// private rooms chat section begins here
+
+// Userlist.html page scripts begins
+  const allUsersList = document.getElementById('all-users-list');
+  const searchInput = document.getElementById('search-input');
+
+  if (allUsersList && searchInput) {  // Check if you are on the userlist page
+    const fetchAllUsers = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/users');
+        const users = await res.json();
+
+        console.log(users);
+
+        users.forEach(username => {
+          const listItem = document.createElement('li');
+          listItem.className = 'user-item';
+          const usernameText = document.createTextNode(username);
+          listItem.appendChild(usernameText);
+          const button = document.createElement('button');
+          button.className = 'start-chat-button';
+          button.innerText = 'Start Private Chat';
+          button.addEventListener('click', () => {
+            startPrivateChat(username);
+          });
+          listItem.appendChild(button);
+          allUsersList.appendChild(listItem);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchAllUsers();
+
+    // Add event listener to handle search
+    searchInput.addEventListener('keyup', (event) => {
+      const filter = event.target.value.toUpperCase();
+      const li = allUsersList.getElementsByTagName('li');
+      for(let i = 0; i < li.length; i++) {
+        const btn = li[i].getElementsByTagName('button')[0];
+        const txtValue = btn.textContent || btn.innerText;
+        if(txtValue.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = '';
+        } else {
+          li[i].style.display = 'none';
+        }
+      }
+    });
+  }
+// Userlist.html page scripts ends
+
+
+
+
+
+ /*     // private rooms chat section begins here
 function getRoomID(user1, user2) {
   let users = [user1, user2];
   users.sort();
@@ -85,7 +139,7 @@ function startPrivateChat(otherUser) {
     socket.emit('privateMessage', { roomID, username, message });
     chatInput.value = '';
   });
-}
+}                  */
 
 
   // Existing code begins
@@ -95,7 +149,7 @@ function startPrivateChat(otherUser) {
   const forgotPasswordForm = document.getElementById('forgot-password-form');
   const resetPasswordForm = document.getElementById('reset-password-form');
 
-  // Login form functionality
+  // Login form functionality starts
   if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -145,6 +199,8 @@ function startPrivateChat(otherUser) {
       });
     });
   }
+
+  //Login form
 
   // Register form functionality
   if (registerForm) {
