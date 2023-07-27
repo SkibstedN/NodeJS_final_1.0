@@ -33,6 +33,11 @@ router.get('/checkSession', (req, res) => {
     res.set('Cache-Control', 'no-store, must-revalidate, private').set('Expires', '-1').set('Pragma', 'no-cache');
     res.sendFile(path.resolve('../pages/userlist.html'));
   });
+
+  router.get('/privatechat', isAuthorized, (req,res) => {
+    res.set('Cache-Control', 'no-store, must-revalidate, private').set('Expires', '-1').set('Pragma', 'no-cache');
+    res.sendFile(path.resolve('../pages/privatechat.html'));
+  });
   
 
 

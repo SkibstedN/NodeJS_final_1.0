@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import session from 'express-session';
+import privateChatRouter from './routes/privateChatRouter.js';
 import authRoutes from './routes/authRoutes.js';
 import pageRoutes from './routes/pageRoutes.js';
 import path, { dirname } from 'path';
@@ -76,6 +77,7 @@ app.use(session({
 
 app.use('/auth', authRoutes);
 app.use('/app', pageRoutes);
+app.use('/chat', privateChatRouter); 
 
 app.get('/app/onlineUsers', (req, res) => {
   // Return online users
