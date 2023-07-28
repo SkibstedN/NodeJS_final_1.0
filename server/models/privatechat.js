@@ -9,6 +9,7 @@ const PrivateChatSchema = new mongoose.Schema({
     otherUser: {
       username: { type: String, required: true }
     },
+    messages: [{ sender: String, content: String, sentOn: { type: Date, default: Date.now } }],
   });
 
 const privatechat = mongoose.model('privatechat', PrivateChatSchema);
