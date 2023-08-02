@@ -2,8 +2,7 @@ import privateChat from "../models/privatechat.js";
 import { Router } from "express";
 const router = Router();
 
-router.post("/history", async (req, res) => {
-  console.log(req.body);
+router.post("/private", async (req, res) => {
   const { username, otherUsername } = req.body;
   const existingChat = await privateChat.findOne({
     $or: [
@@ -20,7 +19,6 @@ router.post("/history", async (req, res) => {
   }
 });
 
-// For getting all messages between the 2 user that have the same roomId
 router.get("/message/:roomId", async (req, res) => {
   const roomId = req.params.roomId || '';
   try {
@@ -39,7 +37,6 @@ router.get("/message/:roomId", async (req, res) => {
   }
 });
 
-// Send new message
 router.post("/message", async (req, res) => {
   const { roomId, username, messageContent } = req.body;
 

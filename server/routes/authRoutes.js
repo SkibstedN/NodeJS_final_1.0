@@ -2,7 +2,6 @@ import express from 'express';
 import User from '../models/User.js';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
-import path from 'path';
 
 const router = express.Router();
 
@@ -34,7 +33,7 @@ router.post('/register', async (req, res) => {
     const user = new User({ username, email, password });
     await user.save();
     req.session.userId = user._id;
-    
+
 
     // Call sendEmail function
     await sendEmail({
@@ -63,7 +62,11 @@ router.post('/login', async (req, res) => {
       if (!isMatch) return res.status(400).json({ error: 'Invalid password' });
 
       req.session.userId = user._id;
-      res.status(200).json({ message: 'User logged in successfully', username: user.username });
+      req.session.user = {
+        username: user.username,
+        email: user.email,
+      }
+      res.status(200).json({ message: 'User logged in successfully', username: user.username, session: req.session });
     });
   } catch (error) {
     console.error(error);
@@ -89,25 +92,11 @@ router.post('/forgotPassword', async (req, res) => {
       subject: 'Password Reset Request',
       text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
               Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n
-              http://localhost:${process.env.PORT}/auth/resetPassword/${token}\n\n
+              http://localhost:${process.env.FRONTEND_PORT}/reset-password?token=${token}\n\n
               If you did not request this, please ignore this email and your password will remain unchanged.\n`,
     });
 
     res.status(200).json({ success: true, message: 'recovery email sent' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-router.get('/resetPassword/:token', async (req, res) => {
-  try {
-    const user = await User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } });
-
-    if (!user) {
-      return res.status(400).json({ error: 'Password reset token is invalid or has expired.' });
-    }
-    res.sendFile(path.resolve('../client/public/resetPassword.html'));
-
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -127,7 +116,7 @@ router.post('/resetPassword/:token', async (req, res) => {
 
     // Mark the password as modified before saving
     user.markModified('password');
-    
+
     await user.save();
     res.json({ message: 'Password has been reset successfully.' });
   } catch (error) {
@@ -148,6 +137,14 @@ router.post('/logout', (req, res) => {
     });
   } else {
     res.status(400).json({ error: 'User is not logged in' });
+  }
+});
+
+router.get('/checkSession', (req, res) => {
+  if (req.session.userId) {
+    res.json({ loggedIn: true, session: req.session });
+  } else {
+    res.json({ loggedIn: false });
   }
 });
 
