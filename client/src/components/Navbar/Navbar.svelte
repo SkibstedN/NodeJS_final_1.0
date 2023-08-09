@@ -1,7 +1,7 @@
 <script>
     import { Router, link, Route } from "svelte-navigator";
     import { session } from "../../stores/stores";
-    import logo from "../../assets/logo.ico";
+    import logo from "../../assets/beer-mug.png";
     import PrivateRoute from "../PrivateRoutes/PrivateRoute.svelte";
     import Logout from "../Authentication/Logout.svelte";
     import Login from "../../pages/Authentication/Login.svelte";
