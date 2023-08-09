@@ -1,19 +1,22 @@
 {
   "name": "client",
-  "version": "1.0.0",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "keywords": [
-    "Websockets"
-  ],
-  "author": "Nikolaj Skibsted",
-  "license": "MIT",
-  "description": "Exam project spring 2023",
   "dependencies": {
     "socket.io-client": "^4.6.1",
+    "svelte-loading-spinners": "^0.3.4",
+    "svelte-navigator": "^3.2.2",
     "toastr": "^2.1.4"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^2.4.2",
+    "svelte": "^3.55.1",
+    "vite": "^4.2.0"
   }
 }

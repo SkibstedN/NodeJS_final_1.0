@@ -1,9 +1,9 @@
-import express from 'express';
+import { Router } from 'express';
 import User from '../models/User.js';
 import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
-const router = express.Router();
+const router = Router();
 
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
