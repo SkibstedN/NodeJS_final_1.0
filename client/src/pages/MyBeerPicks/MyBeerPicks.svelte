@@ -55,7 +55,7 @@
                         <p>{beer.description}</p>
                         <p>{beer.country}</p>
                         {#if $session.user.username === $params.username}
-                            <button on:click={() => removeBeer(beer)}
+                            <button id="knap" on:click={() => removeBeer(beer)}
                                 >Remove</button
                             >
                         {/if}
@@ -71,6 +71,7 @@
         list-style: none;
         padding: 0;
     }
+    
 
     .content {
         display: flex;

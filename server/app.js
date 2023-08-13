@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
   });
 
   // Private chat
-  // Join the chatroom with the roomId that are between the 2 user
+  // Join the chatroom with the roomId which is shared between the 2 users
   socket.on("joinPrivateChatRoom", (roomId) => {
     socket.join(roomId);
   });
@@ -70,54 +70,57 @@ io.on("connection", (socket) => {
 });
 
 import session from "express-session";
-app.use(session({
+app.use(
+  session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 60 * 60 * 1000, // 1 hour
+      maxAge: 60 * 60 * 1000, // 1 hour
     },
-}));
+  })
+);
 
-import authRoutes from './routes/authRoutes.js';
-app.use('/auth', authRoutes);
+import authRoutes from "./routes/authRoutes.js";
+app.use("/auth", authRoutes);
 import privateChatRouter from "./routes/privateChatRouter.js";
-app.use('/chat', privateChatRouter);
+app.use("/chat", privateChatRouter);
 import userRoutes from "./routes/userRoutes.js";
-app.use('/user', userRoutes);
-
-app.get('/app/onlineUsers', (req, res) => {
-    // Return online users
-    res.send(onlineUsers);
-});
-
-app.get('/onlineUsers', (req, res) => {
-    res.send(onlineUsers);
-});
+app.use("/user", userRoutes);
 
 const loginRequired = (req, res, next) => {
-    if (!req.session.userId) {
-        return res.status(401).send({ error: 'Unauthorized' });
-    }
-    next();
+  if (!req.session.userId) {
+    return res.status(401).send({ error: "Unauthorized" });
+  }
+  next();
 };
 
-import User from './models/User.js'
-app.get('/api/users', loginRequired, async (req, res) => {
-    try {
-        const users = await User.find({});  // Fetch all users
-        res.status(200).send(users.map(user => user.username));  // Respond with an array of usernames
-    } catch (err) {
-        console.error(err);
-        res.status(500).send({ error: 'An error occurred while trying to fetch users.' });
-    }
+app.get("/onlineUsers", loginRequired, (req, res) => {
+  res.send(onlineUsers);
 });
 
-import mongoose from 'mongoose';
+import User from "./models/User.js";
+app.get("/api/users", loginRequired, async (req, res) => {
+  try {
+    const users = await User.find({}); // Fetch all users
+    res.status(200).send(users.map((user) => user.username)); // Respond with an array of usernames
+  } catch (err) {
+    console.error(err);
+    res
+      .status(500)
+      .send({ error: "An error occurred while trying to fetch users." });
+  }
+});
+
+import mongoose from "mongoose";
 const connectionString = process.env.MONGODB_CONNECT;
-mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB Atlas'))
-    .catch(err => console.error('Could not connect to MongoDB Atlas', err));
+mongoose
+  .connect(connectionString, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("Connected to MongoDB Atlas"))
+  .catch((err) => console.error("Could not connect to MongoDB Atlas", err));
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, (error) => {
@@ -127,4 +130,3 @@ server.listen(PORT, (error) => {
   }
   console.log("Server is running on port", PORT);
 });
-

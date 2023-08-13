@@ -43,7 +43,7 @@
     });
 
     const getUsers = async () => {
-        const response = await fetch($serverURL + "/app/onlineUsers", {
+        const response = await fetch($serverURL + "/onlineUsers", {
             credentials: "include",
         });
         const data = await response.json();
