@@ -87,6 +87,8 @@ import privateChatRouter from "./routes/privateChatRouter.js";
 app.use("/chat", privateChatRouter);
 import userRoutes from "./routes/userRoutes.js";
 app.use("/user", userRoutes);
+import beerRoutes from "./routes/beerRoutes.js";
+app.use(beerRoutes);
 
 const loginRequired = (req, res, next) => {
   if (!req.session.userId) {

@@ -14,7 +14,7 @@
 
     const fetchBeers = async () => {
         const username = $params.username;
-        const url = `${$serverURL}/user/beers/${username}`;
+        const url = `${$serverURL}/beers/${username}`;
         const response = await fetch(url, {
             credentials: "include",
         });
@@ -28,7 +28,7 @@
 
     const removeBeer = async (beer) => {
         const username = $params.username;
-        const url = `${$serverURL}/user/beers/${username}/${beer._id}`;
+        const url = `${$serverURL}/beers/${username}/${beer._id}`;
         const response = await fetch(url, {
             credentials: "include",
             method: "DELETE",
