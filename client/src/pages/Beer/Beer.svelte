@@ -207,6 +207,7 @@
   }
 
   .search {
+    color: white;
     display: flex;
     align-items: center;
     height: 35px;

@@ -32,9 +32,7 @@
     const urlParams = new URLSearchParams($location.search);
     roomId = urlParams.get("roomId");
 
-    const response = await fetch(`${$serverURL}/chat/message/${roomId}`, {
-      credentials: "include",
-    });
+    const response = await fetch(`${$serverURL}/chat/message/${roomId}`);
     const data = await response.json();
     if (response.ok) {
       messages = data.chatHistory;
