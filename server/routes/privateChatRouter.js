@@ -34,7 +34,6 @@ router.get("/message/:roomId", async (req, res) => {
     const existingChat = await privateChat.findOne({ roomId });
 
     if (existingChat) {
-      await existingChat.save();
       res.status(200).send({ chatHistory: existingChat.messages });
     } else {
       res.status(404).send("Chat room not found");

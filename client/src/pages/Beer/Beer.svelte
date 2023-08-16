@@ -61,7 +61,6 @@
 <SessionCheck />
 
 <h1>Beers from {country}</h1>
-<!-- <h1>Beers from {country.charAt(0).toUpperCase() + country.slice(1)}</h1> -->
 
 <div class="container-fluid row bg-dark">
   <div class="beers-content col mt-4">

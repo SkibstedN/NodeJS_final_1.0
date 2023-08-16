@@ -1,7 +1,6 @@
 <script>
-    import Logout from "../../components/Authentication/Logout.svelte";
-    import frontPageImage from "../../assets/beerchatting.jpeg";
-
+  import Logout from "../../components/Authentication/Logout.svelte";
+  import frontPageImage from "../../assets/beerchatting.jpeg";
 </script>
 
 <h3>Welcome to Beer Chat</h3>
@@ -10,11 +9,11 @@
 
 <a href="/chatroom"><h2>Go to the chatroom</h2></a>
 
-<div><img class="imgStyle" src={frontPageImage} alt="void"></div>
+<div><img class="imgStyle" src={frontPageImage} alt="void" /></div>
 
 <style>
-    .imgStyle{
-        object-fit: contain;
-        max-width: 500px;
-    } 
+  .imgStyle {
+    object-fit: contain;
+    max-width: 500px;
+  }
 </style>

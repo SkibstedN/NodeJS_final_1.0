@@ -1,49 +1,49 @@
 <script>
-    import { session, serverURL } from "../../stores/stores.js";
-    import { useNavigate } from "svelte-navigator";
-    import { link } from "svelte-navigator";
-    import io from "socket.io-client";
-    import toastr from "toastr";
+  import { session, serverURL } from "../../stores/stores.js";
+  import { useNavigate } from "svelte-navigator";
+  import { link } from "svelte-navigator";
+  import io from "socket.io-client";
+  import toastr from "toastr";
 
-    export let isLink = false;
-    
-    const navigate = useNavigate();
+  export let isLink = false;
 
-    const socket = io($serverURL);
+  const navigate = useNavigate();
 
-    async function handleLogout() {
-        const url = $serverURL + "/auth/logout";
+  const socket = io($serverURL);
 
-        try {
-            const response = await fetch(url, {
-                credentials: "include",
-                method: "POST",
-            });
+  async function handleLogout() {
+    const url = $serverURL + "/auth/logout";
 
-            const data = await response.json();
+    try {
+      const response = await fetch(url, {
+        credentials: "include",
+        method: "POST",
+      });
 
-            if (response.ok) {
-                toastr.success(data.message);
-                const username = sessionStorage.getItem("username");
-                socket.emit("logout", username);
-                sessionStorage.removeItem("username");
+      const data = await response.json();
 
-                session.set(data.session);
-            } else {
-                toastr.error("Logout failed");
-            }
-        } catch (error) {
-            console.log(error);
-        }
+      if (response.ok) {
+        toastr.success(data.message);
+        const username = sessionStorage.getItem("username");
+        socket.emit("logout", username);
+        sessionStorage.removeItem("username");
 
-        navigate("/login", { replace: true });
+        session.set(data.session);
+      } else {
+        toastr.error("Logout failed");
+      }
+    } catch (error) {
+      console.log(error);
     }
+
+    navigate("/login", { replace: true });
+  }
 </script>
 
 {#if !isLink}
-    <button on:click={handleLogout}> Logout </button>
+  <button on:click={handleLogout}> Logout </button>
 {:else}
-    <a class="nav-link" href="logout" use:link on:click={handleLogout}>
-        <i class="bi bi-box-arrow-right" />
-    </a>
+  <a class="nav-link" href="logout" use:link on:click={handleLogout}>
+    <i class="bi bi-box-arrow-right" />
+  </a>
 {/if}
