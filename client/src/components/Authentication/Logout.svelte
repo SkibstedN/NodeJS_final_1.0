@@ -24,9 +24,7 @@
 
       if (response.ok) {
         toastr.success(data.message);
-        const username = sessionStorage.getItem("username");
-        socket.emit("logout", username);
-        sessionStorage.removeItem("username");
+        socket.emit("logout", $session.user.username);
 
         session.set(data.session);
       } else {

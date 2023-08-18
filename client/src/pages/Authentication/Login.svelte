@@ -24,8 +24,6 @@
 
       if (response.ok) {
         toastr.success("Logged in successfully!");
-
-        sessionStorage.setItem("username", data.username);
         socket.emit("login", data.username);
 
         session.set(data.session); // set own session from stores.js
