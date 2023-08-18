@@ -13,7 +13,6 @@ const PrivateChatSchema = new mongoose.Schema({
     {
       sender: String,
       content: String,
-      sentOn: { type: Date, default: Date.now },
     },
   ],
 });

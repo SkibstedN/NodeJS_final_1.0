@@ -14,8 +14,7 @@ router.post("/private", async (req, res) => {
     res
       .status(200)
       .send({
-        roomId: existingChat.roomId,
-        chatHistory: existingChat.messages,
+        roomId: existingChat.roomId
       });
   } else {
     const newChat = privateChat({
@@ -55,8 +54,7 @@ router.post("/message", async (req, res) => {
       // Add the new message to the chat history
       existingChat.messages.push({
         sender: username,
-        content: messageContent,
-        sentOn: new Date(),
+        content: messageContent 
       });
 
       await existingChat.save();
